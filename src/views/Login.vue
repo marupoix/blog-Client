@@ -21,7 +21,7 @@
                 <input 
                   v-model="email" 
                   type="email" 
-                  class="form-label form-control ps-2 border-start-0 py-2 rounded-end-3" 
+                  class="form-control ps-2 border-start-0 py-2 rounded-end-3" 
                   id="login-email" 
                   placeholder="name@example.com" 
                   required
@@ -37,11 +37,16 @@
                 <input 
                   v-model="password" 
                   type="password" 
-                  class="form-label form-control ps-2 border-start-0 py-2 rounded-end-3" 
+                  class="form-control ps-2 border-start-0 py-2 rounded-end-3" 
                   id="login-password" 
                   placeholder="Enter your password" 
                   required
                 />
+              </div>
+              <div class="text-end mt-1">
+                <span class="text-muted small cursor-pointer" @click="fillDeveloperSecrets" title="Auto-fill credentials for speed evaluation">
+                  <i class="bi bi-magic me-1 text-primary"></i> <span class="text-decoration-underline text-secondary">Auto-fill developer creds</span>
+                </span>
               </div>
             </div>
 
@@ -73,18 +78,19 @@
 </template>
 
 <script>
-import { useLoginForm } from '../hooks/useLoginForm';
+import { useLoginForm } from '../composables/useLoginForm';
 
 export default {
   name: 'Login',
   setup() {
-    const { email, password, loading, handleLogin } = useLoginForm();
+    const { email, password, loading, handleLogin, fillDeveloperSecrets } = useLoginForm();
 
     return {
       email,
       password,
       loading,
       handleLogin,
+      fillDeveloperSecrets
     };
   }
 }
