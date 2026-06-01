@@ -4,14 +4,14 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
       <div class="d-flex align-items-center gap-2">
         <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-secondary fw-semibold border" style="width: 36px; height: 36px;">
-          {{ (blog.authorName || 'D')[0].toUpperCase() }}
+          {{ (blog.author?.username || blog.authorName || blog.author?.name || 'D')[0].toUpperCase() }}
         </div>
         <div>
           <div class="fw-semibold small text-dark mb-0 line-clamp-1">
-            {{ blog.authorName || 'Developer' }}
+            {{ blog.author?.username || blog.authorName || blog.author?.name || 'Developer' }}
           </div>
           <div class="text-muted small" style="font-size: 0.75rem;">
-            {{ blog.authorEmail || 'author@blog.com' }}
+            {{ blog.author?.email || blog.authorEmail || 'author@blog.com' }}
           </div>
         </div>
       </div>

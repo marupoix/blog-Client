@@ -98,7 +98,7 @@
                     <td>
                       <div class="fw-semibold text-dark truncate-title">{{ blog.title }}</div>
                       <div class="text-muted small" style="font-size: 0.75rem;">
-                        by @{{ blog.authorName || 'admin' }} &middot; {{ blog.comments?.length || 0 }} comments
+                        by @{{ blog.author?.username || blog.authorName || blog.author?.name || 'admin' }} &middot; {{ blog.comments?.length || 0 }} comments
                       </div>
                     </td>
                     <td>

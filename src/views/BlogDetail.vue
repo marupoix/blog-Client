@@ -40,12 +40,12 @@
           <!-- Author Info Banner -->
           <div class="p-3 bg-light rounded-3 d-flex align-items-center gap-3 mb-4 border" id="author-info-banner">
             <div class="rounded-circle bg-dark text-white d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 44px; height: 44px;">
-              {{ (blog.authorName || 'D')[0].toUpperCase() }}
+              {{ (blog.author?.username || blog.authorName || blog.author?.name || 'D')[0].toUpperCase() }}
             </div>
             <div>
               <div class="small text-muted mb-0">Article Author</div>
-              <div class="fw-bold text-dark mb-0 fs-6">{{ blog.authorName || 'Developer' }}</div>
-              <div class="small text-secondary" style="font-size: 0.8rem;">{{ blog.authorEmail || 'author@blog.com' }}</div>
+              <div class="fw-bold text-dark mb-0 fs-6">{{ blog.author?.username || blog.authorName || blog.author?.name || 'Developer' }}</div>
+              <div class="small text-secondary" style="font-size: 0.8rem;">{{ blog.author?.email || blog.authorEmail || 'author@blog.com' }}</div>
             </div>
           </div>
 
