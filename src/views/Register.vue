@@ -108,7 +108,7 @@
 </template>
 
 <script>
-import { useRegisterForm } from '../composables/useRegisterForm';
+import { useRegisterForm } from '../hooks/useRegisterForm';
 
 export default {
   name: 'Register',

@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { useLoginForm } from '../composables/useLoginForm';
+import { useLoginForm } from '../hooks/useLoginForm';
 
 export default {
   name: 'Login',
