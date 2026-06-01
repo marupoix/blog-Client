@@ -43,11 +43,6 @@
                   required
                 />
               </div>
-              <div class="text-end mt-1">
-                <span class="text-muted small cursor-pointer" @click="fillDeveloperSecrets" title="Auto-fill credentials for speed evaluation">
-                  <i class="bi bi-magic me-1 text-primary"></i> <span class="text-decoration-underline text-secondary">Auto-fill developer creds</span>
-                </span>
-              </div>
             </div>
 
             <!-- Submit Button -->

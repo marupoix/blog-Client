@@ -61,25 +61,7 @@
                 />
               </div>
             </div>
-
-            <!-- Admin Privilege Checkbox (Highly useful for testing admin CRUD tools) -->
-            <div class="mb-4 bg-light p-3 rounded-3 border">
-              <div class="form-check form-switch mb-0">
-                <input 
-                  v-model="isAdmin" 
-                  class="form-check-input" 
-                  type="checkbox" 
-                  id="reg-is-admin" 
-                />
-                <label class="form-check-label small fw-semibold text-dark cursor-pointer" for="reg-is-admin">
-                  Grant Administrator access
-                </label>
-              </div>
-              <div class="text-muted small mt-1" style="font-size: 0.75rem;">
-                Toggle this switch to register as an administrator and test creating/editing/deleting blog posts.
-              </div>
-            </div>
-
+            
             <!-- Submit Button -->
             <div class="mb-4">
               <button 
