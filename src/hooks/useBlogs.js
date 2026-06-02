@@ -33,6 +33,55 @@ export function useBlogs() {
         }
     };
 
+    const creating = ref(false);
+    const updating = ref(false);
+
+    const createBlog = async (title, content) => {
+        creating.value = true;
+        try {
+            await axios.post('/posts/addBlog', {
+                title,
+                content
+            }, {
+                headers: {
+                    Authorization: `Bearer ${authStore.token}`
+                }
+            });
+            notyf.success('Blog created successfully!');
+            await fetchBlogs();
+            return true;
+        } catch (error) {
+            console.error('Error creating blog in useBlogs hook:', error);
+            notyf.error(error.response?.data?.error || 'Failed to create blog.');
+            return false;
+        } finally {
+            creating.value = false;
+        }
+    };
+
+    const updateBlog = async (id, title, content) => {
+        updating.value = true;
+        try {
+            await axios.patch(`/posts/updateBlog/${id}`, {
+                title,
+                content
+            }, {
+                headers: {
+                    Authorization: `Bearer ${authStore.token}`
+                }
+            });
+            notyf.success('Blog updated successfully!');
+            await fetchBlogs();
+            return true;
+        } catch (error) {
+            console.error('Error updating blog in useBlogs hook:', error);
+            notyf.error(error.response?.data?.error || 'Failed to update blog.');
+            return false;
+        } finally {
+            updating.value = false;
+        }
+    };
+
     const deletePost = async (id) => {
         if (!confirm('Are you absolutely sure you want to delete this blog post?')) return;
         try {
@@ -67,7 +116,11 @@ export function useBlogs() {
     return {
         blogs,
         loading,
+        creating,
+        updating,
         fetchBlogs,
+        createBlog,
+        updateBlog,
         deletePost,
         triggerEdit,
         formatDate

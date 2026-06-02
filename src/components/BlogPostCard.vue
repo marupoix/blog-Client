@@ -41,12 +41,12 @@
           <strong>{{ blog.comments ? blog.comments.length : 0 }}</strong>
         </span>
 
-        <!-- Quick actions toolbar for Administrators -->
-        <div v-if="isAdmin" class="d-flex align-items-center gap-1 border-start ps-2">
+        <!-- Quick actions toolbar for Authenticated Users -->
+        <div v-if="authStore.user" class="d-flex align-items-center gap-1 border-start ps-2">
           <button @click="$emit('edit', blog)" class="btn btn-sm btn-outline-dark border-0 p-1" title="Edit Post" id="edit-post-action-btn">
             <i class="bi bi-pencil-square text-secondary"></i>
           </button>
-          <button @click="$emit('delete', blog._id)" class="btn btn-sm btn-outline-danger border-0 p-1" title="Delete Post" id="delete-post-action-btn">
+          <button v-if="authStore.user?.isAdmin" @click="$emit('delete', blog._id)" class="btn btn-sm btn-outline-danger border-0 p-1" title="Delete Post" id="delete-post-action-btn">
             <i class="bi bi-trash"></i>
           </button>
         </div>
@@ -56,6 +56,8 @@
 </template>
 
 <script>
+import { useAuthStore } from '../stores/auth';
+
 export default {
   name: 'BlogPostCard',
   props: {
@@ -70,6 +72,8 @@ export default {
   },
   emits: ['edit', 'delete'],
   setup() {
+    const authStore = useAuthStore();
+
     const formatDate = (dateString) => {
       if (!dateString) return 'May 2026';
       const date = new Date(dateString);
@@ -81,6 +85,7 @@ export default {
     };
 
     return {
+      authStore,
       formatDate
     };
   }

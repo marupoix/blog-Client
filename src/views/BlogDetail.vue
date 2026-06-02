@@ -54,12 +54,12 @@
             {{ blog.content }}
           </div>
 
-          <!-- Action buttons for Admins -->
-          <div v-if="authStore.user?.isAdmin" class="d-flex align-items-center gap-2 border-top pt-4">
-            <button @click="triggerEdit" class="btn btn-sm btn-black px-3 rounded-pill">
+          <!-- Action buttons -->
+          <div v-if="authStore.user" class="d-flex align-items-center gap-2 border-top pt-4">
+            <button @click="handleEditClick" class="btn btn-sm btn-black px-3 rounded-pill" id="edit-publication-btn">
               <i class="bi bi-pencil-square me-1"></i> Edit Publication
             </button>
-            <button @click="deletePost" class="btn btn-sm btn-outline-danger px-3 rounded-pill">
+            <button v-if="authStore.user?.isAdmin" @click="deletePost" class="btn btn-sm btn-outline-danger px-3 rounded-pill" id="delete-publication-btn">
               <i class="bi bi-trash me-1"></i> Delete Publication
             </button>
           </div>
@@ -115,11 +115,76 @@
         </section>
       </div>
     </div>
+
+    <!-- Edit Modal for Regular Users -->
+    <div v-if="showEditModal" class="modal-backdrop-custom d-flex align-items-center justify-content-center" @click.self="closeModal" id="edit-blog-modal">
+      <div class="modal-content-custom bg-white border rounded-4 p-4 shadow-lg position-relative">
+        <!-- Close button top-right -->
+        <button @click="closeModal" class="btn-close-custom border-0 bg-transparent text-secondary position-absolute" style="top: 1.5rem; right: 1.5rem;" id="close-modal-btn">
+          <i class="bi bi-x-lg fs-5"></i>
+        </button>
+
+        <h3 class="h4 text-dark mb-3">
+          <i class="bi bi-pencil-square text-dark me-2"></i> Edit Publication
+        </h3>
+        <p class="text-secondary small mb-4">You are updating the article content as a community member.</p>
+
+        <form @submit.prevent="handleUpdateBlog" id="modal-edit-blog-form">
+          <!-- Title field -->
+          <div class="mb-3">
+            <label for="modal-post-title" class="form-label small fw-semibold text-secondary">Post Title</label>
+            <input 
+              v-model="editTitle" 
+              type="text" 
+              class="form-control rounded-3 py-2 custom-input" 
+              id="modal-post-title" 
+              placeholder="Enter a compelling title..." 
+              required 
+            />
+          </div>
+
+          <!-- Content field -->
+          <div class="mb-4">
+            <label for="modal-post-content" class="form-label small fw-semibold text-secondary">Article Content</label>
+            <textarea 
+              v-model="editContent" 
+              class="form-control rounded-3 custom-input" 
+              id="modal-post-content" 
+              rows="6" 
+              placeholder="Write your article body content here..." 
+              required
+            ></textarea>
+          </div>
+
+          <!-- Actions -->
+          <div class="d-flex justify-content-end gap-2 pt-2 border-top">
+            <button 
+              type="button" 
+              class="btn btn-sm btn-outline-black px-4 rounded-pill" 
+              @click="closeModal"
+              :disabled="updating"
+              id="cancel-modal-btn"
+            >
+              Cancel
+            </button>
+            <button 
+              type="submit" 
+              class="btn btn-sm btn-black px-4 rounded-pill d-flex align-items-center gap-2" 
+              :disabled="updating"
+              id="submit-modal-btn"
+            >
+              <span v-if="updating" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              Apply Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth';
 import { useBlogDetail } from '../hooks/useBlogDetail';
@@ -142,15 +207,42 @@ export default {
       loading, 
       newComment, 
       submitting, 
+      updating,
       loadBlog, 
       submitComment, 
       deletePost, 
+      updateBlog,
       formatDate 
     } = useBlogDetail(blogId);
+
+    const showEditModal = ref(false);
+    const editTitle = ref('');
+    const editContent = ref('');
 
     const triggerEdit = () => {
       localStorage.setItem('editBlogId', blogId);
       router.push('/admin');
+    };
+
+    const handleEditClick = () => {
+      if (authStore.user?.isAdmin) {
+        triggerEdit();
+      } else {
+        editTitle.value = blog.value?.title || '';
+        editContent.value = blog.value?.content || '';
+        showEditModal.value = true;
+      }
+    };
+
+    const closeModal = () => {
+      showEditModal.value = false;
+    };
+
+    const handleUpdateBlog = async () => {
+      const success = await updateBlog(editTitle.value, editContent.value);
+      if (success) {
+        closeModal();
+      }
     };
 
     onMounted(() => {
@@ -164,9 +256,16 @@ export default {
       loading,
       newComment,
       submitting,
+      updating,
+      showEditModal,
+      editTitle,
+      editContent,
       submitComment,
       deletePost,
       triggerEdit,
+      handleEditClick,
+      closeModal,
+      handleUpdateBlog,
       formatDate
     };
   }
@@ -176,5 +275,63 @@ export default {
 <style scoped>
 .comment-box {
   border-top: none;
+}
+
+/* Custom premium modal animations and glassmorphism styling */
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(17, 17, 17, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1050;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.modal-content-custom {
+  width: 90%;
+  max-width: 550px;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12) !important;
+  transform: scale(0.95);
+  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.btn-close-custom {
+  font-size: 1.2rem;
+  transition: color 0.15s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+.btn-close-custom:hover {
+  color: #111 !important;
+  transform: rotate(90deg);
+}
+
+.custom-input {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+.custom-input:focus {
+  border-color: #111111;
+  box-shadow: 0 0 0 3px rgba(17, 17, 17, 0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 </style>

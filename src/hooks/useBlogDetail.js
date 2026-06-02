@@ -84,6 +84,35 @@ export function useBlogDetail(blogId) {
         }
     };
 
+    const updating = ref(false);
+
+    const updateBlog = async (title, content) => {
+        updating.value = true;
+        try {
+            await axios.patch(`/posts/updateBlog/${blogId}`, {
+                title,
+                content
+            }, {
+                headers: {
+                    Authorization: `Bearer ${authStore.token}`
+                }
+            });
+            notyf.success('Blog updated successfully!');
+            
+            if (blog.value) {
+                blog.value.title = title;
+                blog.value.content = content;
+            }
+            return true;
+        } catch (error) {
+            console.error('Error updating blog in useBlogDetail hook:', error);
+            notyf.error(error.response?.data?.error || 'Failed to update blog.');
+            return false;
+        } finally {
+            updating.value = false;
+        }
+    };
+
     const formatDate = (dateString, withTime = false) => {
         if (!dateString) return 'May 2026';
         const date = new Date(dateString);
@@ -109,9 +138,12 @@ export function useBlogDetail(blogId) {
         loading,
         newComment,
         submitting,
+        updating,
         loadBlog,
         submitComment,
         deletePost,
+        updateBlog,
         formatDate
     };
 }
+
