@@ -30,7 +30,7 @@
 
     <!-- Footer of the card showing Actions and details like comments and link -->
     <div class="d-flex justify-content-between align-items-center mt-auto pt-3 border-top border-light-subtle">
-      <router-link :to="'/blog/' + blog._id" class="btn btn-sm btn-outline-black px-3 rounded-pill" id="read-post-btn-ref">
+      <router-link :to="'/posts/' + blog._id" class="btn btn-sm btn-outline-black px-3 rounded-pill" id="read-post-btn-ref">
         Read Post <i class="bi bi-arrow-right ms-1"></i>
       </router-link>
 
