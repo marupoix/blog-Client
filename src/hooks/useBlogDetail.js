@@ -23,7 +23,7 @@ export function useBlogDetail(blogId) {
     const loadBlog = async () => {
         loading.value = true;
         try {
-            const response = await axios.get(`/blogs/getBlog/${blogId}`, {
+            const response = await axios.get(`/posts/getBlog/${blogId}`, {
                 headers: {
                     Authorization: `Bearer ${authStore.token}`
                 }
@@ -42,7 +42,7 @@ export function useBlogDetail(blogId) {
         if (!newComment.value.trim()) return;
         submitting.value = true;
         try {
-            await axios.patch(`/blogs/addComment/${blogId}`, {
+            await axios.patch(`/posts/addComment/${blogId}`, {
                 comment: newComment.value
             }, {
                 headers: {
@@ -71,7 +71,7 @@ export function useBlogDetail(blogId) {
     const deletePost = async () => {
         if (!confirm('Are you absolutely sure you want to delete this blog post? This action is permanent.')) return;
         try {
-            await axios.delete(`/blogs/deleteBlog/${blogId}`, {
+            await axios.delete(`/posts/deleteBlog/${blogId}`, {
                 headers: {
                     Authorization: `Bearer ${authStore.token}`
                 }

@@ -24,7 +24,7 @@ export function useAdminForm(onSuccess) {
         try {
             if (isEditing.value) {
                 // Update action
-                await axios.patch(`/blogs/updateBlog/${editBlogId.value}`, {
+                await axios.patch(`/posts/updateBlog/${editBlogId.value}`, {
                     title: title.value,
                     content: content.value
                 }, {
@@ -36,7 +36,7 @@ export function useAdminForm(onSuccess) {
                 cancelEdit();
             } else {
                 // Create action
-                await axios.post('/blogs/addBlog', {
+                await axios.post('/posts/addBlog', {
                     title: title.value,
                     content: content.value
                 }, {

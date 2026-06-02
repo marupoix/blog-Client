@@ -19,7 +19,7 @@ export function useBlogs() {
     const fetchBlogs = async () => {
         loading.value = true;
         try {
-            const response = await axios.get('/blogs/getBlogs', {
+            const response = await axios.get('/posts/getBlogs', {
                 headers: {
                     Authorization: `Bearer ${authStore.token}`
                 }
@@ -36,7 +36,7 @@ export function useBlogs() {
     const deletePost = async (id) => {
         if (!confirm('Are you absolutely sure you want to delete this blog post?')) return;
         try {
-            await axios.delete(`/blogs/deleteBlog/${id}`, {
+            await axios.delete(`/posts/deleteBlog/${id}`, {
                 headers: {
                     Authorization: `Bearer ${authStore.token}`
                 }
